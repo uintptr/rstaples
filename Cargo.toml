@@ -2,6 +2,10 @@
 name = "rstaples"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+description = "Utility functions"
+repository = "https://github.com/uintptr/rstaples"
+homepage = "https://github.com/uintptr/rstaples"
 
 [dependencies]
 chrono = "0.4.41"
