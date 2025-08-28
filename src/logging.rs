@@ -1,11 +1,23 @@
 use std::path::{Path, PathBuf};
 
+use log::LevelFilter;
+
 use crate::error::Result;
 
-#[derive(Default)]
 pub struct StaplesLogger {
     verbose: bool,
     log_file_path: Option<PathBuf>,
+    log_level: LevelFilter,
+}
+
+impl Default for StaplesLogger {
+    fn default() -> Self {
+        Self {
+            verbose: false,
+            log_file_path: None,
+            log_level: LevelFilter::Warn,
+        }
+    }
 }
 
 impl StaplesLogger {
@@ -23,6 +35,11 @@ impl StaplesLogger {
         P: AsRef<Path>,
     {
         self.log_file_path = Some(path.as_ref().to_path_buf());
+        self
+    }
+
+    pub fn with_log_level(mut self, level: LevelFilter) -> Self {
+        self.log_level = level;
         self
     }
 
@@ -47,7 +64,7 @@ impl StaplesLogger {
                     message
                 ))
             })
-            .level(log::LevelFilter::Info);
+            .level(self.log_level);
 
         let f = match &self.log_file_path {
             Some(v) => f.chain(fern::log_file(v)?),
