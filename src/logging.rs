@@ -5,7 +5,8 @@ use log::LevelFilter;
 use crate::error::Result;
 
 pub struct StaplesLogger {
-    verbose: bool,
+    stdout: bool,
+    stderr: bool,
     log_file_path: Option<PathBuf>,
     log_level: LevelFilter,
 }
@@ -13,7 +14,8 @@ pub struct StaplesLogger {
 impl Default for StaplesLogger {
     fn default() -> Self {
         Self {
-            verbose: false,
+            stdout: false,
+            stderr: false,
             log_file_path: None,
             log_level: LevelFilter::Warn,
         }
@@ -26,7 +28,12 @@ impl StaplesLogger {
     }
 
     pub fn with_stdout(mut self) -> Self {
-        self.verbose = true;
+        self.stdout = true;
+        self
+    }
+
+    pub fn with_stderr(mut self) -> Self {
+        self.stderr = true;
         self
     }
 
@@ -71,8 +78,13 @@ impl StaplesLogger {
             None => f,
         };
 
-        let f = match self.verbose {
+        let f = match self.stdout {
             true => f.chain(std::io::stdout()),
+            false => f,
+        };
+
+        let f = match self.stdout {
+            true => f.chain(std::io::stderr()),
             false => f,
         };
 
