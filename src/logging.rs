@@ -83,7 +83,7 @@ impl StaplesLogger {
             false => f,
         };
 
-        let f = match self.stdout {
+        let f = match self.stderr {
             true => f.chain(std::io::stderr()),
             false => f,
         };
