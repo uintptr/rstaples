@@ -1,6 +1,6 @@
 [package]
 name = "rstaples"
-version = "0.1.4"
+version = "0.2.0"
 edition = "2024"
 license = "MIT"
 description = "Utility functions"
@@ -8,7 +8,8 @@ repository = "https://github.com/uintptr/rstaples"
 homepage = "https://github.com/uintptr/rstaples"
 
 [dependencies]
-chrono = "0.4.42"
-derive_more = { version = "2.0.1", features = ["from"] }
-fern = "0.7.1"
-log = "0.4.28"
+chrono = "0.4"
+derive_more = { version = "2.0", features = ["from"] }
+log = "0.4"
+env_logger = "0.11"
+colored = "3.0"
