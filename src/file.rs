@@ -1,6 +1,5 @@
 use std::{
     env,
-    fmt::Display,
     path::{Path, PathBuf},
 };
 
@@ -44,13 +43,4 @@ where
         Ok(v) => Ok(v),
         Err(_) => find_file_cwd(&rel_file_path),
     }
-}
-
-pub fn printkv<S, D>(k: S, v: D)
-where
-    S: AsRef<str>,
-    D: Display,
-{
-    let k = format!("{}:", k.as_ref());
-    println!("    {k:<17}{v}")
 }
