@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, fs, os::unix::fs::MetadataExt, path::Path};
 
 pub fn printkv<S, D>(k: S, v: D)
 where
@@ -26,4 +26,16 @@ pub fn fmt_size(bytes: u64) -> String {
     } else {
         format!("{} bytes", bytes)
     }
+}
+
+pub fn fmt_file_size<P>(path: P) -> String
+where
+    P: AsRef<Path>,
+{
+    let meta = match fs::metadata(path) {
+        Ok(v) => v,
+        Err(_) => return "".into(),
+    };
+
+    fmt_size(meta.size())
 }
