@@ -6,7 +6,7 @@ where
     D: Display,
 {
     let k = format!("{}:", k.as_ref());
-    println!("    {k:<17}{v}")
+    println!("    {k:<25}{v}")
 }
 
 pub fn fmt_size(bytes: u64) -> String {
