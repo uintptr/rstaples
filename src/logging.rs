@@ -23,6 +23,7 @@ impl Write for MultiWriter {
         if let Some(out) = &mut self.out {
             out.write(buf)?;
         }
+        self.fd.write_all(buf)?;
         Ok(buf.len())
     }
 
