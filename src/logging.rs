@@ -4,6 +4,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
+use chrono::Local;
 use colored::{Color, Colorize};
 use env_logger::Target;
 use log::{Level, LevelFilter};
@@ -44,6 +45,7 @@ pub struct StaplesLogger {
     stdout: bool,
     stderr: bool,
     colors: bool,
+    epoch_ts: bool,
     log_file_path: Option<PathBuf>,
     log_level: LevelFilter,
 }
@@ -64,6 +66,7 @@ impl Default for StaplesLogger {
             stdout: false,
             stderr: false,
             colors: false,
+            epoch_ts: false,
             log_file_path: None,
             log_level: LevelFilter::Warn,
         }
@@ -87,6 +90,11 @@ impl StaplesLogger {
 
     pub fn with_colors(mut self) -> Self {
         self.colors = true;
+        self
+    }
+
+    pub fn with_epoch_ts(mut self) -> Self {
+        self.epoch_ts = true;
         self
     }
 
@@ -123,13 +131,20 @@ impl StaplesLogger {
         }
 
         let colors = self.colors;
+        let epoch_ts = self.epoch_ts;
 
         builder.filter_level(self.log_level);
         builder
             .format(move |buf, record| {
-                let now_ms = chrono::Local::now().timestamp_millis();
-                let now_sec = now_ms / 1000;
-                let now_ms = now_ms - (now_sec * 1000);
+                let ts = if epoch_ts {
+                    let now_ms = chrono::Local::now().timestamp_millis();
+                    let now_sec = now_ms / 1000;
+                    let now_ms = now_ms - (now_sec * 1000);
+
+                    format!("{}.{:03}", now_sec, now_ms)
+                } else {
+                    Local::now().to_rfc3339()
+                };
 
                 let target = match record.line() {
                     Some(v) => format!("{}:{v}", record.target()),
@@ -137,9 +152,8 @@ impl StaplesLogger {
                 };
 
                 let msg = format!(
-                    "{}.{:03} :: {:<5} :: {:<45} {}",
-                    now_sec,
-                    now_ms,
+                    "{} :: {:<5} :: {:<45} {}",
+                    ts,
                     record.level(),
                     target,
                     record.args()
