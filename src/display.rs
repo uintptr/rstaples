@@ -1,4 +1,4 @@
-use std::{fmt::Display, fs, os::unix::fs::MetadataExt, path::Path};
+use std::{fmt::Display, fs, path::Path};
 
 pub fn printkv<S, D>(k: S, v: D)
 where
@@ -37,5 +37,5 @@ where
         Err(_) => return "".into(),
     };
 
-    fmt_size(meta.size())
+    fmt_size(meta.len())
 }
